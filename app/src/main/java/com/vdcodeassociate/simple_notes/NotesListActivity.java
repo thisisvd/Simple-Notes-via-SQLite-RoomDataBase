@@ -1,6 +1,7 @@
 package com.vdcodeassociate.simple_notes;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,6 +29,10 @@ public class NotesListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_notes_list);
 
         recyclerView = findViewById(R.id.recycleView);
+
+        Toolbar toolbar = findViewById(R.id.notes_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Notes APP");
 
         initRecycleView();
         dummyNotes();
