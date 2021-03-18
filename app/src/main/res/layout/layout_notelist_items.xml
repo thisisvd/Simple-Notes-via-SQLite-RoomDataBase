@@ -32,10 +32,9 @@
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:id="@+id/note_timestamp"
+        android:id="@+id/note_date"
         android:textSize="17sp"
         android:layout_weight="20"
-        android:lines="1"
         android:text="Dec 1 2017"
         android:padding="10dp" />
 
