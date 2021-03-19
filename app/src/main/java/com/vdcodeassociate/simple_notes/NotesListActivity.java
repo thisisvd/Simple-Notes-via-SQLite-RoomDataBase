@@ -67,7 +67,9 @@ public class NotesListActivity extends AppCompatActivity implements RecycleViewA
     @Override
     public void onNoteClick(int position) {
         Log.d(TAG, "onNoteClick: "+mNotes.get(position));
+
         Intent intent = new Intent(NotesListActivity.this,NoteActivity.class);
+        intent.putExtra("selected_note",mNotes.get(position));
         startActivity(intent);
     }
 }
