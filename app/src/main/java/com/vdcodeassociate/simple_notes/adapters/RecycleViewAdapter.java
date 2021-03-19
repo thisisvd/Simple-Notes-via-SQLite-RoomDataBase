@@ -17,19 +17,21 @@ import java.util.List;
 public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.ViewHolder>{
 
     private List<Notes> mNotes = new ArrayList<>();
+    private OnNoteListener monNoteListener;
 
     public RecycleViewAdapter() {
     }
 
-    public RecycleViewAdapter(List<Notes> mNotes) {
+    public RecycleViewAdapter(List<Notes> mNotes,OnNoteListener onNoteListener) {
         this.mNotes = mNotes;
+        this.monNoteListener = onNoteListener;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_notelist_items,parent,false);
-        return new ViewHolder(view);
+        return new ViewHolder(view,monNoteListener);
     }
 
     @Override
@@ -43,16 +45,28 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
         return mNotes.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         public TextView title,date;
+        OnNoteListener onNoteListener;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView,OnNoteListener onNoteListener) {
             super(itemView);
 
             title = itemView.findViewById(R.id.note_date);
             date = itemView.findViewById(R.id.note_title);
+            this.onNoteListener = onNoteListener;
 
+            itemView.setOnClickListener(this::onClick);
         }
+
+        @Override
+        public void onClick(View v) {
+            onNoteListener.onNoteClick(getAdapterPosition());
+        }
+    }
+
+    public interface OnNoteListener{
+        void onNoteClick(int position);
     }
 }
