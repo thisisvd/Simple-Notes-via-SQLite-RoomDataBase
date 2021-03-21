@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".NoteActivity"
-    android:background="#E3EEEF">
+    android:background="@color/white">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -17,18 +17,20 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize">
 
+            <include layout="@layout/layout_notestoolbar"/>
+
         </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <EditText
+    <com.vdcodeassociate.simple_notes.LinedEditText
         android:id="@+id/note_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:textColor="@color/black"
         android:textSize="20sp"
-        android:padding="5dp"
-
+        android:padding="10dp"
+        android:gravity="top"
         />
 
 </LinearLayout>
