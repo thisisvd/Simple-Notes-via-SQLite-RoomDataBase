@@ -31,6 +31,7 @@
         android:textSize="20sp"
         android:focusable="false"
         android:padding="10dp"
-        android:gravity="top" />
+        android:gravity="top"
+        android:imeOptions="flagNoExtractUi"/>
 
 </LinearLayout>

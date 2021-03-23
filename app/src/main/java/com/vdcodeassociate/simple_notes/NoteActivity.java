@@ -1,12 +1,17 @@
 package com.vdcodeassociate.simple_notes;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethod;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
@@ -18,8 +23,7 @@ public class NoteActivity extends AppCompatActivity implements
         View.OnTouchListener,
         GestureDetector.OnGestureListener,
         GestureDetector.OnDoubleTapListener,
-        View.OnClickListener
-{
+        View.OnClickListener {
 
     private static final String TAG = "NoteActivity";
     private static final int EDIT_MODE_ENABLED = 1;
@@ -31,7 +35,6 @@ public class NoteActivity extends AppCompatActivity implements
     private TextView mViewTitle;
     private RelativeLayout mCheckContainer, mBackArrowContainer;
     private ImageButton mCheck, mBackArrow;
-
 
     // vars
     private boolean mIsNewNote;
@@ -56,12 +59,13 @@ public class NoteActivity extends AppCompatActivity implements
 
         if(getIncomingIntent()){
             // this is a new note (EDIT MODE)
+            // this is not a new note (VIEW MODE)
             setNewNoteProperties();
             enableEditMode();
         }
         else{
-            // this is not a new note (VIEW MODE)
             setNoteProperties();
+            disableContentInteraction();
         }
     }
 
@@ -70,6 +74,7 @@ public class NoteActivity extends AppCompatActivity implements
         mLinedEditText.setOnTouchListener(this);
         mCheck.setOnClickListener(this);
         mViewTitle.setOnClickListener(this);
+        mBackArrow.setOnClickListener(this::onClick);
     }
 
     private boolean getIncomingIntent(){
@@ -85,6 +90,22 @@ public class NoteActivity extends AppCompatActivity implements
         return true;
     }
 
+    private void disableContentInteraction(){
+        mLinedEditText.setKeyListener(null);
+        mLinedEditText.setFocusable(false);
+        mLinedEditText.setFocusableInTouchMode(false);
+        mLinedEditText.setCursorVisible(false);
+        mLinedEditText.clearFocus();
+    }
+
+    private void enableContentInteraction(){
+        mLinedEditText.setKeyListener(new EditText(this).getKeyListener());
+        mLinedEditText.setFocusable(true);
+        mLinedEditText.setFocusableInTouchMode(true);
+        mLinedEditText.setCursorVisible(true);
+        mLinedEditText.requestFocus();
+    }
+
     private void enableEditMode(){
         mBackArrowContainer.setVisibility(View.GONE);
         mCheckContainer.setVisibility(View.VISIBLE);
@@ -93,6 +114,8 @@ public class NoteActivity extends AppCompatActivity implements
         mEditTitle.setVisibility(View.VISIBLE);
 
         mMode = EDIT_MODE_ENABLED;
+
+        enableContentInteraction();
     }
 
     private void disableEditMode(){
@@ -103,6 +126,8 @@ public class NoteActivity extends AppCompatActivity implements
         mEditTitle.setVisibility(View.GONE);
 
         mMode = EDIT_MODE_DISABLED;
+
+        disableContentInteraction();
     }
 
     private void setNewNoteProperties(){
@@ -181,6 +206,10 @@ public class NoteActivity extends AppCompatActivity implements
                 mEditTitle.setSelection(mEditTitle.length());
                 break;
             }
+            case R.id.toolbar_back_arrow:{
+                finish();
+                break;
+            }
         }
     }
 
@@ -193,5 +222,20 @@ public class NoteActivity extends AppCompatActivity implements
             super.onBackPressed();
         }
 
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        outState.putInt("node",mMode);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mMode = savedInstanceState.getInt("mode");
+        if(mMode == EDIT_MODE_ENABLED){
+            enableEditMode();
+        }
     }
 }
