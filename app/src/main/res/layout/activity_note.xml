@@ -29,6 +29,7 @@
         android:layout_height="match_parent"
         android:textColor="@color/black"
         android:textSize="20sp"
+        android:focusable="false"
         android:padding="10dp"
         android:gravity="top" />
 
